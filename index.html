@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMAC - Premium Corporate Asset Management System</title>
+    <style>
+        /* --- PREMIUM BLUE & DARK BLUE THEME STYLES --- */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #1e293b;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- LOGIN SCREEN CONTAINER WITH BACKGROUND IMAGE --- */
+        #loginWrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url('ship-container.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* --- LOGIN BOX KO RIGHT SIDE LE JANE KE LIYE --- */
+            padding-right: 8%; /* --- RIGHT WALL SE KAPHI ACCENT GAP RAKHA HAI --- */
+            box-sizing: border-box;
+            z-index: 9999;
+        }
+
+        /* --- TOP LEFT CORNER LOGO SETUP --- */
+        .top-left-logo {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            width: 160px; /* Aap is width ko apne logo ke size ke hisab se chhota-bada kar sakte hain */
+            height: auto;
+            z-index: 10000;
+        }
+        .top-left-logo img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.96); /* Clean White Solid UI */
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25); /* Background clear hone par box ukhra hua dikhega */
+        }
+        .login-box h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .login-box p {
+            font-size: 16px;
+            color: #475569;
+            margin: 0 0 30px 0;
+            line-height: 1.4;
+        }
+        .login-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .login-group input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #cbd5e1;
+            background-color: #f4f4f6;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #1e293b;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        .login-group input::placeholder {
+            color: #8e8e93;
+        }
+        .login-group input:focus {
+            background-color: #ffffff;
+            border-color: #2563eb;
+            outline: none;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .forgot-link {
+            display: inline-block;
+            color: #2563eb;
+            font-size: 14px;
+            text-decoration: underline;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+        .forgot-link:hover {
+            color: #1d4ed8;
+        }
+        .btn-signin {
+            width: 100%;
+            padding: 14px 0;
+            background-color: #4cd964; 
+            color: #000000;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: none;
+            transition: background-color 0.2s ease;
+        }
+        .btn-signin:hover {
+            background-color: #3ec756;
+        }
+        .login-error {
+            color: #ef4444;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* --- APP MAIN LAYOUT (Hidden initially) --- */
+        #appContainer {
+            display: none; 
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- LEFT NAVIGATION SIDEBAR (DARK BLUE) --- */
+        .sidebar { 
+            width: 260px; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0; 
+            box-shadow: 4px 0 15px rgba(15, 23, 42, 0.2);
+        }
+        .sidebar-header { 
+            padding: 25px 20px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            border-bottom: 1px solid rgba(255,255,255,0.15); 
+            text-transform: uppercase; 
+            background-color: #0b0f19; 
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .sidebar-menu { 
+            list-style: none; 
+            padding: 20px 0; 
+            margin: 0; 
+        }
+        .sidebar-item { 
+            padding: 15px 25px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            border-left: 5px solid transparent; 
+            transition: all 0.3s ease; 
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+        .sidebar-item.active { 
+            background-color: #f0f4f8; 
+            border-left: 5px solid #2563eb; 
+            color: #1e3a8a;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+        }
+        .main-content { 
+            flex-grow: 1; 
+            padding: 30px; 
+            overflow-y: auto; 
+            height: 100vh; 
+            box-sizing: border-box; 
+        }
+        
+        /* --- VISIBILITY MANAGER --- */
+        .dashboard-page { 
+            display: none !important; 
+        }
+        .dashboard-page.active { 
+            display: block !important; 
+        }
+        #printTemplate { 
+            display: none !important; 
+        }
+
+        /* --- DISPLAY CONTAINER --- */
+        .container {
+            max-width: 950px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.05);
+            margin: 0 auto;
+            border-top: 6px solid #1e3a8a;
+            border-bottom: 2px solid #3b82f6;
+            position: relative;
+        }
+        .container.wide-container {
+            max-width: 1200px; 
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.015; /* Opacity ko kam kar diya taaki RAM text ke peeche disturbance na ho */
+            pointer-events: none;
+            background-image: url('ship-container.png'); 
+            background-repeat: no-repeat;
+            background-position: center 65%; /* Watermark ko form se thoda niche shift kar diya */
+            background-size: 35%;
+        }
+
+        /* --- CORPORATE HEADER CONTENT --- */
+        .header-container {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 1;
+            max-width: 870px;
+        }
+        .logo-box {
+            width: 80px !important;  
+            height: 80px !important;
+            min-width: 80px;
+            min-height: 80px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+        }
+        .logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .company-name {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin: 0;
+        }
+        .sub-heading {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2563eb;
+            margin: 4px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- FORM STRUCTURE GRID --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1e3a8a;
+            font-size: 13px;
+        }
+        input, select {
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8fafc;
+            transition: all 0.25s ease;
+            color: #0f172a;
+        }
+        input:focus, select:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        input:read-only, select:disabled, select.readonly-select {
+            background-color: #cbd5e1 !important;
+            border-color: #cbd5e1;
+            cursor: not-allowed;
+            color: #475569 !important;
+            opacity: 1;
+        }
+
+        .section-heading {
+            grid-column: span 3;
+            font-size: 15px;
+            color: #1e3a8a;
+            font-weight: 700;
+            border-left: 4px solid #2563eb;
+            padding-left: 10px;
+            margin-top: 25px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            margin-top: 35px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        button {
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .btn-submit { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; }
+        .btn-submit:hover { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); box-shadow: 0 6px 14px rgba(30,58,138,0.2); }
+        .btn-submit:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; box-shadow: none; cursor: not-allowed; }
+        .btn-edit { background-color: #3b82f6; color: white; display: none; }
+        .btn-edit:hover { background-color: #1d4ed8; }
+        .btn-clear { background-color: #64748b; color: white; }
+        .btn-clear:hover { background-color: #475569; }
+        .btn-print { background-color: #10b981; color: white; }
+        .btn-print:hover { background-color: #059669; }
+        .btn-search { background-color: #2563eb; color: white; padding: 11px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-search:hover { background-color: #1d4ed8; }
+
+        .status-banner {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+        }
+        .status-exist { background-color: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; }
+        .status-new { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+
+        /* --- STYLES FOR OVERFLOW MULTI-HEADER TABLE --- */
+        .table-responsive { width: 100%; overflow-x: auto; margin-top: 20px; border-radius: 8px; border: 1px solid #cbd5e1; }
+        .data-table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; white-space: nowrap; }
+        .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: center; }
+        .data-table th { background-color: #1e3a8a; color: white; font-weight: 600; position: sticky; top: 0; }
+        .data-table tr:nth-child(even) { background-color: #f8fafc; }
+        .btn-row-print { background-color: #10b981; color: white; padding: 5px 10px; font-size: 11px; border-radius: 4px; font-weight: bold; }
+        .btn-row-print:hover { background-color: #059669; }
+
+        /* --- PRINT MEDIA CONFIG --- */
+        /* --- PERFECT SINGLE PAGE PRINT MEDIA CONFIG --- */
+        @media print {
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+                background-color: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* #appContainer ko bhi display none diya hai taaki page 1 blank na aaye */
+            #loginWrapper, .sidebar, .no-print, #statusBanner, .main-content, 
+            .dashboard-page, form, .container, #appContainer { 
+                display: none !important; 
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #printTemplate { 
+                display: block !important; 
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                padding: 20px 25px !important; 
+                margin: 0 !important; 
+                border: 2px solid #1e3a8a !important; 
+                border-radius: 12px !important; 
+                box-sizing: border-box !important; 
+                page-break-inside: avoid !important;
+                page-break-before: avoid !important;
+            } 
+
+            #printTemplate::before {
+                display: none !important; /* Is line se print slip se background image poori tarah hat jayegi */
+            }
+
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 11.5px; position: relative; z-index: 2; }
+            .print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 5px 10px; text-align: center !important; vertical-align: middle; }
+            .print-table th { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; width: 35%; }
+            .print-section-title { font-size: 13.5px; font-weight: bold; color: #1e3a8a; margin-top: 15px; margin-bottom: 5px; border-bottom: 2px solid #1e3a8a; padding-bottom: 3px; text-transform: uppercase; position: relative; z-index: 2; }
+            .print-footer-decl { margin-top: 30px !important; padding-top: 15px; }
+            .sig-section { margin-top: 40px !important; display: flex; justify-content: space-between; font-size: 12.5px; position: relative; z-index: 2; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginWrapper">
+    
+    <div class="top-left-logo">
+        <img src="acfs_logo.png" alt="Company Logo" onerror="this.style.display='none';">
+    </div>
+
+    <div class="login-box">
+        <h2>Welcome to Ashutosh CFS IT portal</h2>
+        <p>IT WILL work and it make easier for every one</p>
+        
+        <div id="loginErrorMsg" class="login-error">⚠️ Incorrect Username or Password</div>
+        
+        <form id="loginForm" onsubmit="handleAppLogin(event)">
+            <div class="login-group">
+                <input type="text" id="loginUsername" placeholder="Username" required autocomplete="username">
+            </div>
+            <div class="login-group">
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">Show</span>
+            </div>
+            
+            <span class="forgot-link" onclick="redirectToPasswordReset()">Forgot your password?</span>
+            <br>
+            <button type="submit" class="btn-signin">Welcome ACFS Zone</button>
+        </form>
+    </div>
+</div>
+
+<div id="appContainer">
+    <div class="sidebar no-print">
+        <div class="sidebar-header">ACFS Asset Matrix</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active" onclick="switchPage('imacPage')">🖥️ IMAC New Entry</li>
+            <li class="sidebar-item" onclick="switchPage('userSearchPage')">🔍 User Asset Search</li>
+            <li class="sidebar-item" onclick="switchPage('movementPage')">🔄 Asset Movement Log</li>
+            <li class="sidebar-item" onclick="switchPage('deallocationPage')">❌ De-allocation</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div id="imacPage" class="dashboard-page active">
+            <div class="container">
+                <div class="header-container">
+                    <div class="logo-box">
+                        <img src="acfs.jpg" alt="Logo" onerror="this.style.display='none'; this.parentNode.innerText='LOGO';">
+                    </div>
+                    <div class="title-area">
+                        <h1 class="company-name">Ashutosh Container Services Pvt. Ltd.</h1>
+                        <div class="sub-heading">IMAC Data Management System</div>
+                    </div>
+                </div>
+
+                <div id="statusBanner" class="status-banner"></div>
+                
+                <form id="assetForm">
+                    <div class="form-grid">
+                        <div class="section-heading">Asset Specification</div>
+                        
+                        <div class="form-group">
+                            <label for="srNo">Sr No.</label>
+                            <input type="number" id="srNo" placeholder="Fetching next Sr No..." min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assetId">Asset ID</label>
+                            <input type="text" id="assetId" placeholder="Auto-generated ID" readonly style="background-color: #cbd5e1; cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">User Name (System Name)</label>
+                            <input type="text" id="username" placeholder="e.g., DEEPAK (KAPIL)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="code2">Code 2</label>
+                            <select id="code2" disabled class="readonly-select" required>
+                                <option value="">-- Auto Generated --</option>
+                                <option value="DES">DES</option>
+                                <option value="AIO">AIO</option>
+                                <option value="LAP">LAP</option>
+                                <option value="PRI">PRI</option>
+                                <option value="FS">FS</option>
+                                <option value="FW">FW</option>
+                                <option value="NS">NS</option>
+                                <option value="AP">AP</option>
+                                <option value="P2P">P2P</option>
+                                <option value="AC">AC</option>
+                                <option value="CPU">CPU</option>
+                                <option value="RAM">RAM</option>
+                                <option value="HDD">HDD</option>
+                                <option value="SPS">SPS</option>
+                                <option value="ANA">ANA</option>
+                                <option value="SPR">SPR</option>
+                                <option value="POS">POS</option>
+                                <option value="MON">MON</option>
+                                <option value="NVR">NVR</option>
+                                <option value="UPS">UPS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sysType">SYS. TYPE</label>
+                            <select id="sysType" required>
+                                <option value="">-- Select --</option>
+                                <option value="DES">DESKTOP</option>
+                                <option value="AIO">ALL IN ONE DESKTOP</option>
+                                <option value="LAP">LAPTOP</option>
+                                <option value="PRI">PRINTER</option>
+                                <option value="FS">FILE STORAGE/NAS BOX</option>
+                                <option value="FW">FIRE WALL</option>
+                                <option value="NS">NETWORK SWITCH</option>
+                                <option value="AP">ACCESS POINT</option>
+                                <option value="P2P">P2P</option>
+                                <option value="AC">ACCESS CONTROL</option>
+                                <option value="CPU">CENTRALIZED PROCESSING UNIT</option>
+                                <option value="RAM">RANDOM ACCESS MEMORY</option>
+                                <option value="HDD">HARD DISK</option>
+                                <option value="SPS">SMARTPHONE SCRAP</option>
+                                <option value="ANA">ANALOG PHONE</option>
+                                <option value="SPR">SMARTPHONE RUNNING</option>
+                                <option value="POS">POINT OF SALE</option>
+                                <option value="MON">MONITOR</option>
+                                <option value="NVR">NVR</option>
+                                <option value="UPS">UPS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <input type="text" id="department" placeholder="Auto-populated Department" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="windows">Windows OS</label>
+                            <select id="windows" required>
+                                <option value="">-- Select OS --</option>
+                                <option value="WIN-11 PRO">WIN-11 PRO</option>
+                                <option value="WIN-10 PRO">WIN-10 PRO</option>
+                                <option value="WIN-11">WIN-11</option>
+                                <option value="WIN-10">WIN-10</option>
+                                <option value="Windows Server">Windows Server</option>
+                                <option value="Other">Other</option>
+                                <option value="NA">NA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ram">RAM</label>
+                            <input type="text" id="ram" placeholder="e.g., 8 GB / NA" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hddSsd">HDD / SSD</label>
+                            <input type="text" id="hddSsd" placeholder="e.g., 512 GB SSD / NA" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipAddress">IP Address</label>
+                            <input type="text" id="ipAddress" placeholder="e.g., 192.168.1.50">
+                        </div>
+                        <div class="form-group">
+                            <label for="processor">Processor</label>
+                            <input type="text" id="processor" placeholder="e.g., Core i5 / NA" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serialNumber">Serial Number</label>
+                            <input type="text" id="serialNumber" placeholder="S/N Code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Model</label>
+                            <input type="text" id="model" placeholder="e.g., HMD 105 DS" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="e.g., FIRST FLOOR" required>
+                        </div>
+
+                        <div class="section-heading">Employee Details</div>
+
+                        <div class="form-group">
+                            <label for="empName">Employee Name</label>
+                            <input type="text" id="empName" list="employeeSuggestions" placeholder="Type Name (e.g., Anmol)..." required>
+                            <datalist id="employeeSuggestions"></datalist>
+                        </div>
+                        <div class="form-group">
+                            <label for="empId">Employee ID</label>
+                            <input type="text" id="empId" placeholder="Auto-populated ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="designation">Designation</label>
+                            <input type="text" id="designation" placeholder="Auto-populated Designation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceNo">Invoice No.</label>
+                            <input type="text" id="invoiceNo" placeholder="Enter Invoice Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateIssue">Date of Issue</label>
+                            <input type="date" id="dateIssue" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks</label>
+                            <input type="text" id="remarks" placeholder="Enter Remarks">
+                        </div>
+                        <div class="form-group">
+                            <label for="allocStatus">Allocation Status</label>
+                            <select id="allocStatus" required>
+                                <option value="Assigned">Assigned</option>
+                                <option value="Reassigned">Reassigned</option>
+                                <option value="Scrap">Scrap</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group no-print">
+                        <button type="button" class="btn-print" onclick="prepareAndPrint()">🖨️ Print Document</button>
+                        <button type="button" id="clearBtn" class="btn-clear" onclick="clearFormFully()">🧹 Clear Form</button>
+                        <button type="button" id="editBtn" class="btn-edit" onclick="enableEditing()">✏️ Edit Asset Details</button>
+                        <button type="submit" id="submitBtn" class="btn-submit">Save Row to Google Sheet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="userSearchPage" class="dashboard-page">
+            <div class="container wide-container"> 
+                <div class="header-container">
+                    <div class="logo-box">
+                        <img src="acfs.jpg" alt="Logo" onerror="this.style.display='none'; this.parentNode.innerText='LOGO';">
+                    </div>
+                    <div class="title-area">
+                        <h1 class="company-name">Ashutosh Container Services Pvt. Ltd.</h1>
+                        <div class="sub-heading">IMAC Data Management System</div>
+                    </div>
+                </div>
+
+                <h2>🔍 Search All Assets by Employee, User Name or Department</h2>
+                <div style="display: flex; gap: 15px; margin-bottom: 30px; max-width: 600px;">
+                    <input type="text" id="searchUserName" placeholder="Enter Employee Name, System Username, or Department..." style="flex-grow: 1;">
+                    <button type="button" class="btn-search" onclick="searchAssetsMultiField()">Search Assets</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sr No</th>
+                                <th>Asset ID</th>
+                                <th>User name</th>
+                                <th>Code 2</th>
+                                <th>SYS. TYPE</th>
+                                <th>Department</th>
+                                <th>Windows</th>
+                                <th>RAM</th>
+                                <th>HDD/SSD</th>
+                                <th>IP</th>
+                                <th>Processor</th>
+                                <th>Serial Number</th>
+                                <th>Model</th>
+                                <th>Location</th>
+                                <th>Employee Name</th>
+                                <th>Employee ID</th>
+                                <th>Designation</th>
+                                <th>Invoice No.</th>
+                                <th>Date of Issue</th>
+                                <th>Remarks</th>
+                                <th>Allocation Status</th>
+                                <th style="background-color: #10b981;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userResultBody">
+                            <tr><td colspan="22" style="text-align: center; color: #94a3b8;">🔍 Fetching latest entries...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="movementPage" class="dashboard-page">
+            <div class="container">
+                <div class="header-container">
+                    <div class="logo-box">
+                        <img src="acfs.jpg" alt="Logo" onerror="this.style.display='none'; this.parentNode.innerText='LOGO';">
+                    </div>
+                    <div class="title-area">
+                        <h1 class="company-name">Ashutosh Container Services Pvt. Ltd.</h1>
+                        <div class="sub-heading">IMAC Data Management System</div>
+                    </div>
+                </div>
+
+                <h2>🔄 Old Asset Movement Log</h2>
+                <div style="display: flex; gap: 15px; margin-bottom: 25px; max-width: 500px;">
+                    <input type="text" id="moveAssetSearch" placeholder="Enter Asset ID (e.g., ACFS-DES-1)">
+                    <button type="button" class="btn-search" onclick="fetchForMovement()">Find Asset</button>
+                </div>
+                <form id="movementForm" style="display:none; border-top: 1px dashed #cbd5e1; padding-top: 20px;">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Current User</label><input type="text" id="currUser" readonly></div>
+                        <div class="form-group"><label>Current Location</label><input type="text" id="currLoc" readonly></div>
+                        <div class="form-group"><label>System Type</label><input type="text" id="moveSysType" readonly></div>
+                        
+                        <div class="section-heading" style="grid-column: span 3; color: #1e3a8a;">New Assignment Details</div>
+                        <div class="form-group"><label>New User Name</label><input type="text" id="newMoveUser" required></div>
+                        <div class="form-group"><label>New Location</label><input type="text" id="newMoveLoc" required></div>
+                        <div class="form-group"><label>Movement Date</label><input type="date" id="moveDate" required></div>
+                    </div>
+                    <div class="button-group"><button type="submit" class="btn-submit">Update New Assignment</button></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="deallocationPage" class="dashboard-page">
+            <div class="container" style="border-top-color: #ef4444;">
+                <div class="header-container">
+                    <div class="logo-box">
+                        <img src="acfs.jpg" alt="Logo" onerror="this.style.display='none'; this.parentNode.innerText='LOGO';">
+                    </div>
+                    <div class="title-area">
+                        <h1 class="company-name">Ashutosh Container Services Pvt. Ltd.</h1>
+                        <div class="sub-heading">IMAC Data Management System</div>
+                    </div>
+                </div>
+
+                <h2>❌ Asset De-allocation (24-Hour Guard Control)</h2>
+                <div style="display: flex; gap: 15px; margin-bottom: 25px; max-width: 500px;">
+                    <input type="text" id="deallocAssetSearch" placeholder="Enter Asset ID to De-allocate">
+                    <button type="button" class="btn-search" style="background-color: #ef4444;" onclick="fetchForDeallocation()">Check Status</button>
+                </div>
+                <div id="deallocFormBox" style="display: none; border-top: 1px dashed #bfdbfe; padding-top: 20px;">
+                    <table class="data-table" style="margin-bottom: 25px;">
+                        <tr><th>Currently Allocated To</th><td id="d_user"></td></tr>
+                        <tr><th>Allocation Date</th><td id="d_date" style="font-weight: bold; color: #1e3a8a;"></td></tr>
+                    </table>
+                    <div class="form-group" style="max-width: 300px; margin-bottom: 20px;">
+                        <label>Select De-allocation / Return Date</label>
+                        <input type="date" id="deallocReturnDate" required>
+                    </div>
+                    <button type="button" class="btn-clear" style="padding: 12px 30px; background-color: #ef4444;" onclick="executeDeallocation()">Confirm De-allocation</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<div id="printTemplate">
+    <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 5px;">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 75px; height: 75px; margin-right: 20px; display: flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff;">
+                    <img src="acfs.jpg" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                </div>
+                <div>
+                    <h1 style="font-size: 23px; font-weight: 700; color: #1e3a8a; margin: 0;">Ashutosh Container Services Pvt. Ltd.</h1>
+                    <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; display: flex; justify-content: space-between; width: 580px;">
+                        <span>IMAC DATA MANAGEMENT SYSTEM</span>
+                        <span style="font-size: 15px; font-weight: 800; color: #0f172a; border: 1px solid #1e3a8a; padding: 1px 8px; border-radius: 4px; background: #f1f5f9;" id="p_header_assetId">ACFS-XXXX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="print-section-title">Asset Specification</div>
+        <table class="print-table">
+            <tr><th>Sr No.</th><td id="p_srNo"></td></tr>
+            <tr><th>User name (System)</th><td id="p_username"></td></tr>
+            <tr><th>Code 2</th><td id="p_code2"></td></tr>
+            <tr><th>SYS. TYPE</th><td id="p_sysType"></td></tr>
+            <tr><th>Windows OS</th><td id="p_windows"></td></tr>
+            <tr><th>RAM</th><td id="p_ram"></td></tr>
+            <tr><th>HDD / SSD</th><td id="p_hddSsd"></td></tr>
+            <tr><th>IP Address</th><td id="p_ipAddress"></td></tr>
+            <tr><th>Processor</th><td id="p_processor"></td></tr>
+            <tr><th>Serial Number</th><td id="p_serialNumber"></td></tr>
+            <tr><th>Model</th><td id="p_model"></td></tr>
+            <tr><th>Location</th><td id="p_location"></td></tr>
+        </table>
+
+        <div class="print-section-title">Employee Details</div>
+        <table class="print-table">
+            <tr><th>Employee Name</th><td id="p_empName"></td></tr>
+            <tr><th>Employee ID</th><td id="p_empId"></td></tr>
+            <tr><th>Designation</th><td id="p_designation"></td></tr>
+            <tr><th>Department</th><td id="p_department"></td></tr>
+            <tr><th>Invoice No.</th><td id="p_invoiceNo"></td></tr>
+            <tr><th>Date of Issue</th><td id="p_dateIssue"></td></tr>
+            <tr><th>Remarks</th><td id="p_remarks"></td></tr>
+            <tr><th>Allocation Status</th><td id="p_allocStatus"></td></tr>
+        </table>
+    </div>
+
+    <div class="print-footer-decl">
+        <div style="padding: 6px; border: 1px dashed #1e3a8a; border-radius: 6px; background-color: #f8fafc; font-size: 11px; line-height: 1.6; color: #1e293b;">
+            <strong>Terms & Conditions / Declaration:</strong><br>
+            • All company-issued assets must be safely returned during formal detachment.<br>
+            • Any unauthorized expenses on company devices will be borne by the employee.<br>
+            <span style="display: block; margin-top: 2px; font-style: italic; color: #2563eb;">This asset belongs to Ashutosh Container Services Pvt. Ltd.</span>
+        </div>
+
+        <div class="sig-section">
+            <div style="text-align: left; width: 250px; border-top: 1px solid #64748b; padding-top: 5px;">
+                <strong>Pranav Dave</strong><br>
+                <span style="color: #64748b; font-size: 11px;">IT Department (Authorized Sign)</span><br>
+                <span style="color: #0f172a; font-size: 11px; font-weight: 600; display: block; margin-bottom: 2px;" id="p_auto_date">Date: --/--/----</span>
+            </div>
+            <div style="text-align: right; width: 200px; border-top: 1px solid #64748b; padding-top: 5px;">
+    <strong id="p_sig_empName">Receiver Signature</strong><br>
+    <span style="color: #64748b; font-size: 11px;">(Employee Acknowledgment)</span>
+</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7'; 
+    const EMP_SHEET_API_URL = 'https://sheetdb.io/api/v1/lm4gi8ankc63d'; 
+
+    let globalEmployeeDatabase = []; 
+    let globalSheetFullCache = []; 
+
+    function handleAppLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('loginUsername').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+        const errorMsg = document.getElementById('loginErrorMsg');
+
+        if (username === "admin" && pass === "Ashu@2026") {
+            errorMsg.style.display = "none";
+            
+            document.getElementById('loginWrapper').style.display = "none";
+            document.getElementById('appContainer').style.display = "flex";
+            
+            loadEmployeeDatabase();
+            fetchNextSrNo(); 
+        } else {
+            errorMsg.style.display = "block";
+        }
+    }
+
+    function redirectToPasswordReset() {
+        const phoneNumber = "9925036927";
+        const message = "Hello Admin, I forgot my password for ACFS IT Portal. Kindly reset it.";
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function togglePasswordVisibility() {
+        const passInput = document.getElementById('loginPassword');
+        const toggleBtn = document.querySelector('.toggle-password');
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            toggleBtn.innerText = "Hide";
+        } else {
+            passInput.type = "password";
+            toggleBtn.innerText = "Show";
+        }
+    }
+
+    function fetchNextSrNo() {
+        const srNoField = document.getElementById('srNo');
+        srNoField.placeholder = "Calculating next...";
+        
+        fetch(SHEETDB_API_URL)
+        .then(res => res.json())
+        .then(data => {
+            let maxSrNo = 0;
+            if (data && data.length > 0) {
+                globalSheetFullCache = data; 
+                data.forEach(row => {
+                    const currentNum = parseInt(row['Sr No'], 10);
+                    if (!isNaN(currentNum) && currentNum > maxSrNo) { maxSrNo = currentNum; }
+                });
+                renderLast5Entries(data);
+            }
+            const nextSrNo = maxSrNo > 0 ? maxSrNo + 1 : 1;
+            srNoField.value = nextSrNo;
+            updateAssetId(); 
+        })
+        .catch(err => {
+            console.error("Error fetching max Sr No:", err);
+            srNoField.placeholder = "e.g., 418";
+            document.getElementById('userResultBody').innerHTML = `<tr><td colspan="22" style="text-align: center; color: #ef4444;">❌ Error loading default entries.</td></tr>`;
+        });
+    }
+
+    function populateTableWithData(rowsData) {
+        const tbody = document.getElementById('userResultBody');
+        tbody.innerHTML = '';
+        rowsData.forEach(row => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${row['Sr No'] || '-'}</td>
+                    <td><b>${row['Asset ID'] || '-'}</b></td>
+                    <td>${row['User name'] || '-'}</td>
+                    <td>${row['Code 2'] || '-'}</td>
+                    <td>${row['SYS. TYPE'] || '-'}</td>
+                    <td>${row['Department'] || '-'}</td>
+                    <td>${row['Windows'] || '-'}</td>
+                    <td>${row['RAM'] || '-'}</td>
+                    <td>${row['HDD/SSD'] || '-'}</td>
+                    <td>${row['IP'] || '-'}</td>
+                    <td>${row['Processor'] || '-'}</td>
+                    <td>${row['Serial Number'] || '-'}</td>
+                    <td>${row['Model'] || '-'}</td>
+                    <td>${row['Location'] || '-'}</td>
+                    <td>${row['Employee Name'] || '-'}</td>
+                    <td>${row['Employee ID'] || '-'}</td>
+                    <td>${row['Designation'] || '-'}</td>
+                    <td>${row['Invoice No.'] || '-'}</td>
+                    <td>${row['Date of Issue'] || '-'}</td>
+                    <td>${row['Remarks'] || '-'}</td>
+                    <td>${row['Allocation Status'] || '-'}</td>
+                    <td>
+                        <button type="button" class="btn-row-print" onclick="printDirectRowByIndex(${row['Sr No']})">🖨️ Print</button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    function renderLast5Entries(allData) {
+        const last5 = allData.slice(-5).reverse();
+        if(last5.length > 0) {
+            populateTableWithData(last5);
+        } else {
+            document.getElementById('userResultBody').innerHTML = `<tr><td colspan="22" style="text-align: center; color: #94a3b8;">Kuch bhi dalkar Search par click karein.</td></tr>`;
+        }
+    }
+
+    function loadEmployeeDatabase() {
+        fetch(EMP_SHEET_API_URL)
+        .then(res => res.json())
+        .then(data => {
+            if(data && data.length > 0) {
+                globalEmployeeDatabase = data;
+                populateEmployeeSuggestions();
+            }
+        })
+        .catch(err => console.error("Employee Sheet Connection Error: ", err));
+    }
+
+    function populateEmployeeSuggestions() {
+        const datalist = document.getElementById('employeeSuggestions');
+        datalist.innerHTML = '';
+        globalEmployeeDatabase.forEach(emp => {
+            if(emp['Employee Name']) {
+                const option = document.createElement('option');
+                option.value = emp['Employee Name'].trim();
+                datalist.appendChild(option);
+            }
+        });
+    }
+
+    document.getElementById('empName').addEventListener('input', function(e) {
+        const selectedName = e.target.value.trim();
+        const matchedEmp = globalEmployeeDatabase.find(emp => 
+            (emp['Employee Name'] || '').toLowerCase() === selectedName.toLowerCase()
+        );
+        if(matchedEmp) {
+            document.getElementById('empId').value = matchedEmp['Emp ID'] || '';
+            document.getElementById('designation').value = matchedEmp['Designation'] || '';
+            document.getElementById('department').value = matchedEmp['Department'] || '';
+        }
+    });
+
+    function switchPage(pageId) {
+        document.querySelectorAll('.dashboard-page').forEach(page => {
+            page.classList.remove('active'); page.style.display = 'none'; 
+        });
+        document.querySelectorAll('.sidebar-item').forEach(item => { item.classList.remove('active'); });
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) { targetPage.classList.add('active'); targetPage.style.display = 'block'; }
+        if (window.event && window.event.currentTarget) window.event.currentTarget.classList.add('active');
+    }
+
+    const sysTypeInput = document.getElementById('sysType');
+    const srNoInput = document.getElementById('srNo');
+    const assetIdInput = document.getElementById('assetId');
+    const serialNumberInput = document.getElementById('serialNumber');
+    const submitBtn = document.getElementById('submitBtn');
+    const editBtn = document.getElementById('editBtn');
+    const statusBanner = document.getElementById('statusBanner');
+
+    let isExistingAsset = false; 
+    let isFetching = false; 
+
+    const inputsToToggle = [
+        'username', 'department', 'windows', 'ram', 'hddSsd', 'ipAddress', 
+        'processor', 'model', 'location', 'empName', 'empId', 'designation', 
+        'invoiceNo', 'dateIssue', 'remarks', 'allocStatus'
+    ];
+
+    function getCleanSrNo() {
+        const rawValue = srNoInput.value.trim();
+        if (!rawValue) return '';
+        return parseInt(rawValue, 10).toString();
+    }
+
+    function updateAssetId() {
+        if(isExistingAsset) return; 
+        const sysType = sysTypeInput.value;
+        const cleanSrNo = getCleanSrNo();
+        if (sysType && cleanSrNo) {
+            const generatedId = `ACFS-${sysType.toUpperCase()}-${cleanSrNo}`;
+            if (assetIdInput.value !== generatedId) {
+                assetIdInput.value = generatedId;
+                fetchDataFromServer('Asset ID', generatedId);
+            }
+        } else { assetIdInput.value = ''; }
+    }
+
+    sysTypeInput.addEventListener('change', function() {
+        document.getElementById('code2').value = sysTypeInput.value || '';
+    });
+
+    sysTypeInput.addEventListener('change', updateAssetId);
+    srNoInput.addEventListener('input', updateAssetId);
+    serialNumberInput.addEventListener('change', function() {
+        const snValue = serialNumberInput.value.trim();
+        if (snValue && !isExistingAsset && !isFetching) fetchDataFromServer('Serial Number', snValue);
+    });
+
+    function fetchDataFromServer(columnName, searchValue) {
+        if (isFetching) return;
+        isFetching = true;
+        statusBanner.style.display = 'block';
+        statusBanner.className = 'status-banner status-exist';
+        statusBanner.innerText = `🔍 Checking Google Sheet for ${columnName}...`;
+        
+        fetch(`${SHEETDB_API_URL}/search?${encodeURIComponent(columnName)}=${encodeURIComponent(searchValue)}`)
+        .then(res => res.json())
+        .then(data => {
+            isFetching = false;
+            if (data && data.length > 0) {
+                isExistingAsset = true;
+                const assetData = data[0];
+                statusBanner.className = 'status-banner status-exist';
+                statusBanner.innerText = `📋 Record found in Google Sheet. Click 'Edit Asset Details' to modify.`;
+                
+                srNoInput.value = assetData['Sr No'] || '';
+                assetIdInput.value = assetData['Asset ID'] || '';
+                sysTypeInput.value = assetData['Code 2'] || '';
+
+                document.getElementById('code2').value = sysTypeInput.value;
+                document.getElementById('username').value = assetData['User name'] || '';
+                document.getElementById('department').value = assetData['Department'] || '';
+                document.getElementById('windows').value = assetData['Windows'] || '';
+                document.getElementById('ram').value = assetData['RAM'] || '';
+                document.getElementById('hddSsd').value = assetData['HDD/SSD'] || '';
+                document.getElementById('ipAddress').value = assetData['IP'] || '';
+                document.getElementById('processor').value = assetData['Processor'] || '';
+                serialNumberInput.value = assetData['Serial Number'] || '';
+                document.getElementById('model').value = assetData['Model'] || '';
+                document.getElementById('location').value = assetData['Location'] || '';
+                document.getElementById('empName').value = assetData['Employee Name'] || '';
+                document.getElementById('empId').value = assetData['Employee ID'] || '';
+                document.getElementById('designation').value = assetData['Designation'] || '';
+                document.getElementById('invoiceNo').value = assetData['Invoice No.'] || '';
+                document.getElementById('dateIssue').value = assetData['Date of Issue'] || '';
+                document.getElementById('remarks').value = assetData['Remarks'] || '';
+                document.getElementById('allocStatus').value = assetData['Allocation Status'] || 'Assigned';
+
+                lockFormFields(true);
+                editBtn.style.display = 'inline-block';
+                submitBtn.disabled = true;
+            } else {
+                if(columnName === 'Asset ID') {
+                    isExistingAsset = false;
+                    statusBanner.className = 'status-banner status-new';
+                    statusBanner.innerText = `✨ Asset ID "${searchValue}" is NEW. Fill in details.`;
+                    lockFormFields(false);
+                    editBtn.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Save Row to Google Sheet";
+                } else { statusBanner.style.display = 'none'; }
+            }
+        }).catch(err => { isFetching = false; statusBanner.innerText = "❌ Error connecting to Google Sheet."; });
+    }
+
+    function lockFormFields(shouldLock) {
+        inputsToToggle.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                if (element.tagName === 'SELECT') {
+                    if(shouldLock) element.classList.add('readonly-select');
+                    else element.classList.remove('readonly-select');
+                } else element.readOnly = shouldLock;
+            }
+        });
+        srNoInput.readOnly = shouldLock;
+        serialNumberInput.readOnly = shouldLock;
+        if(shouldLock) sysTypeInput.classList.add('readonly-select');
+        else sysTypeInput.classList.remove('readonly-select');
+    }
+
+    function enableEditing() {
+        lockFormFields(false);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Update Google Sheet Row";
+        statusBanner.style.display = 'none'; 
+        editBtn.style.display = 'none';
+    }
+
+    function clearFormFully() {
+        document.getElementById('assetForm').reset();
+        isExistingAsset = false;
+        isFetching = false;
+        statusBanner.style.display = 'none';
+        editBtn.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Save Row to Google Sheet";
+        lockFormFields(false);
+        fetchNextSrNo(); 
+    }
+
+    let globalMoveId = "";
+    function fetchForMovement() {
+        const assetId = document.getElementById('moveAssetSearch').value.trim();
+        if(!assetId) return;
+        fetch(`${SHEETDB_API_URL}/search?Asset%20ID=${encodeURIComponent(assetId)}`)
+        .then(res => res.json())
+        .then(data => {
+            if(data && data.length > 0) {
+                globalMoveId = assetId;
+                document.getElementById('currUser').value = data[0]['User name'] || 'None';
+                document.getElementById('currLoc').value = data[0]['Location'] || 'None';
+                document.getElementById('moveSysType').value = data[0]['SYS. TYPE'] || 'None';
+                document.getElementById('movementForm').style.display = 'block';
+            } else { alert("⚠️ This Asset ID does not exist!"); }
+        });
+    }
+
+    document.getElementById('movementForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = e.currentTarget.querySelector('button');
+        btn.disabled = true;
+        const updateData = {
+            "User name": document.getElementById('newMoveUser').value.trim(),
+            "Location": document.getElementById('newMoveLoc').value.trim(),
+            "Date of Issue": document.getElementById('moveDate').value,
+            "Allocation Status": "Reassigned"
+        };
+        fetch(`${SHEETDB_API_URL}/Asset%20ID/${encodeURIComponent(globalMoveId)}`, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ data: updateData })
+        })
+        .then(res => res.json())
+        .then(() => {
+            alert(`✅ Movement logged successfully!`);
+            document.getElementById('movementForm').reset();
+            document.getElementById('movementForm').style.display = 'none';
+            document.getElementById('moveAssetSearch').value = '';
+            fetchNextSrNo();
+        }).finally(() => { btn.disabled = false; });
+    });
+
+    function searchAssetsMultiField() {
+        const query = document.getElementById('searchUserName').value.trim().toLowerCase();
+        const tbody = document.getElementById('userResultBody');
+        
+        if(!query) { 
+            if(globalSheetFullCache.length > 0) {
+                renderLast5Entries(globalSheetFullCache);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="22" style="text-align: center; color: #94a3b8;">Kuch bhi dalkar Search par click karein.</td></tr>`;
+            }
+            return; 
+        }
+
+        tbody.innerHTML = `<tr><td colspan="22" style="text-align: center; color: #1e3a8a;">🔍 Fetching and matching records...</td></tr>`;
+
+        fetch(SHEETDB_API_URL)
+        .then(res => res.json())
+        .then(results => {
+            tbody.innerHTML = '';
+            if(results && results.length > 0) {
+                globalSheetFullCache = results; 
+                
+                const filtered = results.filter(row => 
+                    (row['Employee Name'] || '').toLowerCase().includes(query) ||
+                    (row['Employee ID'] || '').toLowerCase().includes(query) ||
+                    (row['User name'] || '').toLowerCase().includes(query) ||
+                    (row['Department'] || '').toLowerCase().includes(query)
+                );
+
+                if(filtered.length > 0) {
+                    populateTableWithData(filtered); 
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="22" style="text-align: center; color: #ef4444;">⚠️ No matching assets found for this search keyword.</td></tr>`;
+                }
+            } else {
+                tbody.innerHTML = `<tr><td colspan="22" style="text-align: center; color: #ef4444;">⚠️ Sheet is empty.</td></tr>`;
+            }
+        }).catch(err => { tbody.innerHTML = `<tr><td colspan="22" style="text-align: center; color: #ef4444;">❌ Error fetching data.</td></tr>`; });
+    }
+
+    function printDirectRowByIndex(targetSrNo) {
+        const rowData = globalSheetFullCache.find(row => parseInt(row['Sr No'], 10) === parseInt(targetSrNo, 10));
+        if(!rowData) { alert("Error: Row data could not be found."); return; }
+
+        const currentAssetId = rowData['Asset ID'] || '-';
+        document.getElementById('p_header_assetId').innerText = currentAssetId;
+        
+        const today = new Date();
+        document.getElementById('p_auto_date').innerText = `Date: ${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+        
+        document.getElementById('p_srNo').innerText = rowData['Sr No'] || '-';
+        document.getElementById('p_username').innerText = rowData['User name'] || '-';
+        document.getElementById('p_code2').innerText = rowData['Code 2'] || '-';
+        document.getElementById('p_sysType').innerText = rowData['SYS. TYPE'] || '-';
+        document.getElementById('p_windows').innerText = rowData['Windows'] || '-';
+        document.getElementById('p_ram').innerText = rowData['RAM'] || '-';
+        document.getElementById('p_hddSsd').innerText = rowData['HDD/SSD'] || '-';
+        document.getElementById('p_ipAddress').innerText = rowData['IP'] || '-';
+        document.getElementById('p_processor').innerText = rowData['Processor'] || '-';
+        document.getElementById('p_serialNumber').innerText = rowData['Serial Number'] || '-';
+        document.getElementById('p_model').innerText = rowData['Model'] || '-';
+        document.getElementById('p_location').innerText = rowData['Location'] || '-';
+
+        document.getElementById('p_empName').innerText = rowData['Employee Name'] || '-';
+        document.getElementById('p_empId').innerText = rowData['Employee ID'] || '-';
+        document.getElementById('p_designation').innerText = rowData['Designation'] || '-';
+        document.getElementById('p_department').innerText = rowData['Department'] || '-';
+        document.getElementById('p_invoiceNo').innerText = rowData['Invoice No.'] || '-';
+        document.getElementById('p_dateIssue').innerText = rowData['Date of Issue'] || '-';
+        document.getElementById('p_remarks').innerText = rowData['Remarks'] || '-';
+        document.getElementById('p_allocStatus').innerText = rowData['Allocation Status'] || 'Assigned';
+        document.getElementById('p_sig_empName').innerText = rowData['Employee Name'] || 'Receiver Signature';
+
+        window.print();
+    }
+
+    let globalDeallocId = "";
+    let allocationDateTimeStr = ""; 
+
+    function fetchForDeallocation() {
+        const assetId = document.getElementById('deallocAssetSearch').value.trim();
+        if(!assetId) return;
+        fetch(`${SHEETDB_API_URL}/search?Asset%20ID=${encodeURIComponent(assetId)}`)
+        .then(res => res.json())
+        .then(data => {
+            if(data && data.length > 0) {
+                globalDeallocId = assetId;
+                allocationDateTimeStr = data[0]['Date of Issue'] || ''; 
+                document.getElementById('d_user').innerText = data[0]['User name'] || '-';
+                document.getElementById('d_date').innerText = allocationDateTimeStr || 'Not Set';
+                document.getElementById('deallocFormBox').style.display = 'block';
+            } else { alert("⚠️ This Asset ID does not exist!"); }
+        });
+    }
+
+    function executeDeallocation() {
+        if(!globalDeallocId || !allocationDateTimeStr) return;
+        const returnDateValue = document.getElementById('deallocReturnDate').value;
+        if(!returnDateValue) { alert("Please select a return date."); return; }
+
+        const allocTime = new Date(allocationDateTimeStr).getTime();
+        const returnTime = new Date(returnDateValue).getTime();
+        if ((returnTime - allocTime) < 86400000) {
+            alert(`⚠️ De-allocation Blocked!\n\nThis system cannot be returned within 24 hours of its distribution date.`);
+            return;
+        }
+
+        if(!confirm("Are you sure you want to de-allocate this system?")) return;
+        const blankRowData = { "User name": "AVAILABLE", "Location": "IT STOCKROOM" };
+
+        fetch(`${SHEETDB_API_URL}/Asset%20ID/${encodeURIComponent(globalDeallocId)}`, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ data: blankRowData })
+        })
+        .then(res => res.json())
+        .then(() => {
+            alert(`❌ Asset de-allocated successfully!`);
+            document.getElementById('deallocFormBox').style.display = 'none';
+            document.getElementById('deallocAssetSearch').value = '';
+            clearFormFully();
+        });
+    }
+
+    function prepareAndPrint() {
+        document.getElementById('p_header_assetId').innerText = assetIdInput.value || '-';
+        const today = new Date();
+        document.getElementById('p_auto_date').innerText = `Date: ${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+        
+        document.getElementById('p_srNo').innerText = srNoInput.value || '-';
+        document.getElementById('p_username').innerText = document.getElementById('username').value || '-';
+        document.getElementById('p_code2').innerText = document.getElementById('code2').value || '-';
+        document.getElementById('p_sysType').innerText = sysTypeInput.options[sysTypeInput.selectedIndex].text || '-';
+        document.getElementById('p_windows').innerText = document.getElementById('windows').value || '-';
+        document.getElementById('p_ram').innerText = document.getElementById('ram').value || '-';
+        document.getElementById('p_hddSsd').innerText = document.getElementById('hddSsd').value || '-';
+        document.getElementById('p_ipAddress').innerText = document.getElementById('ipAddress').value || '-';
+        document.getElementById('p_processor').innerText = document.getElementById('processor').value || '-';
+        document.getElementById('p_serialNumber').innerText = serialNumberInput.value || '-';
+        document.getElementById('p_model').innerText = document.getElementById('model').value || '-';
+        document.getElementById('p_location').innerText = document.getElementById('location').value || '-';
+        document.getElementById('p_empName').innerText = document.getElementById('empName').value || '-';
+        document.getElementById('p_empId').innerText = document.getElementById('empId').value || '-';
+        document.getElementById('p_designation').innerText = document.getElementById('designation').value || '-';
+        document.getElementById('p_department').innerText = document.getElementById('department').value || '-';
+        document.getElementById('p_invoiceNo').innerText = document.getElementById('invoiceNo').value || '-';
+        document.getElementById('p_dateIssue').innerText = document.getElementById('dateIssue').value || '-';
+        document.getElementById('p_remarks').innerText = document.getElementById('remarks').value || '-';
+        document.getElementById('p_allocStatus').innerText = document.getElementById('allocStatus').value || 'Assigned';
+        document.getElementById('p_sig_empName').innerText = document.getElementById('empName').value.trim() || 'Receiver Signature';
+        window.print();
+    }
+
+    document.getElementById('assetForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitBtn.disabled = true; submitBtn.innerText = "Processing...";
+
+        const excelRowData = {
+            "Sr No": getCleanSrNo(),
+            "Asset ID": assetIdInput.value.trim(),
+            "User name": document.getElementById('username').value.trim(),
+            "Code 2": document.getElementById('code2').value.trim(), 
+            "SYS. TYPE": sysTypeInput.options[sysTypeInput.selectedIndex].text,
+            "Department": document.getElementById('department').value.trim(),
+            "Windows": document.getElementById('windows').value,
+            "RAM": document.getElementById('ram').value.trim(),
+            "HDD/SSD": document.getElementById('hddSsd').value.trim(),
+            "IP": document.getElementById('ipAddress').value.trim(),
+            "Processor": document.getElementById('processor').value.trim(),
+            "Serial Number": serialNumberInput.value.trim(),
+            "Model": document.getElementById('model').value.trim(),
+            "Location": document.getElementById('location').value.trim(),
+            "Employee Name": document.getElementById('empName').value.trim(),
+            "Employee ID": document.getElementById('empId').value.trim(),
+            "Designation": document.getElementById('designation').value.trim(), 
+            "Invoice No.": document.getElementById('invoiceNo').value.trim(),
+            "Date of Issue": document.getElementById('dateIssue').value,
+            "Remarks": document.getElementById('remarks').value.trim(),
+            "Allocation Status": document.getElementById('allocStatus').value
+        };
+
+        if (isExistingAsset) {
+            fetch(`${SHEETDB_API_URL}/Asset%20ID/${encodeURIComponent(assetIdInput.value.trim())}`, {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ data: excelRowData })
+            })
+            .then(res => res.json())
+            .then(() => { alert(`🔄 Data successfully updated!`); clearFormFully(); })
+            .catch(() => { submitBtn.disabled = false; });
+        } else {
+            fetch(SHEETDB_API_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ data: [excelRowData] })
+            })
+            .then(res => res.json())
+            .then(() => { alert(`✅ Row appended successfully!`); clearFormFully(); })
+            .catch(() => { submitBtn.disabled = false; });
+        }
+    });
+</script>
+
+</body>
+</html>
