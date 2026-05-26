@@ -995,26 +995,32 @@
 }
 
     // New verification sub-routine handling pin confirmation
-    function handleOtpVerification(event) {
-        event.preventDefault();
-        const userOtp = document.getElementById('inputOtp').value.trim();
-        const otpError = document.getElementById('otpErrorMsg');
+   function handleOtpVerification(event) {
+    event.preventDefault();
+    const userOtp = document.getElementById('inputOtp').value.trim();
+    const otpError = document.getElementById('otpErrorMsg');
 
-        if (generatedOtp && userOtp === generatedOtp) {
-            otpError.style.display = "none";
-            alert("✅ Verification Successful! Access Granted.");
-            
-            // Unlocking the system container layer completely
-            document.getElementById('loginWrapper').style.display = "none";
-            document.getElementById('appContainer').style.display = "flex";
-            
-            loadEmployeeDatabase();
-            fetchNextSrNo(); 
-        } else {
-            otpError.style.display = "block";
-            document.getElementById('inputOtp').value = ""; // Refresh input values
-        }
+    // Strict Security Constraint: Agar generatedOtp null hai toh direct block
+    if (!generatedOtp) {
+        alert("🔒 Security Breach Blocked!\nPehle login form submit karke OTP generate karein.");
+        window.location.reload();
+        return;
     }
+
+    if (userOtp === generatedOtp) {
+        otpError.style.display = "none";
+        alert("✅ Verification Successful! Access Granted.");
+        
+        document.getElementById('loginWrapper').style.display = "none";
+        document.getElementById('appContainer').style.display = "flex";
+        
+        loadEmployeeDatabase();
+        fetchNextSrNo(); 
+    } else {
+        otpError.style.display = "block";
+        document.getElementById('inputOtp').value = "";
+    }
+}
 
     function redirectToPasswordReset() {
         const phoneNumber = "9925036927";
