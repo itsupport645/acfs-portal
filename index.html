@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACFS-IT PORTAL</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <style>
         /* --- PREMIUM BLUE & DARK BLUE THEME STYLES --- */
         body {
@@ -33,7 +35,6 @@
             z-index: 9999;
         }
 
-        /* --- TOP LEFT CORNER LOGO SETUP --- */
         .top-left-logo {
             position: absolute;
             top: 25px;
@@ -126,7 +127,6 @@
             border-radius: 6px;
             cursor: pointer;
             text-align: center;
-            box-shadow: none;
             transition: background-color 0.2s ease;
         }
         .btn-signin:hover {
@@ -140,6 +140,27 @@
             display: none;
         }
 
+        /* --- NEW ADDITIONAL FORM STYLES --- */
+        .otp-box {
+            display: none; /* Hide standard by default state */
+        }
+        .btn-verify {
+            width: 100%;
+            padding: 14px 0;
+            background-color: #2563eb; 
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s ease;
+        }
+        .btn-verify:hover {
+            background-color: #1d4ed8;
+        }
+
         /* --- APP MAIN LAYOUT --- */
         #appContainer {
             display: none; 
@@ -147,7 +168,6 @@
             height: 100%;
         }
 
-        /* --- LEFT NAVIGATION SIDEBAR --- */
         .sidebar { 
             width: 260px; 
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
@@ -202,7 +222,6 @@
             box-sizing: border-box; 
         }
         
-        /* --- VISIBILITY MANAGER --- */
         .dashboard-page { 
             display: none !important; 
         }
@@ -210,7 +229,6 @@
             display: block !important; 
         }
 
-        /* --- DISPLAY CONTAINER --- */
         .container {
             max-width: 950px;
             background: #ffffff;
@@ -237,7 +255,6 @@
             background-size: 35%;
         }
 
-        /* --- CORPORATE HEADER CONTENT --- */
         .header-container {
             display: flex;
             align-items: center;
@@ -281,7 +298,6 @@
             letter-spacing: 2px;
         }
 
-        /* --- FORM STRUCTURE GRID --- */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -378,7 +394,6 @@
         .status-exist { background-color: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; }
         .status-new { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
 
-        /* --- STYLES FOR TABLES --- */
         .table-responsive { width: 100%; overflow-x: auto; margin-top: 20px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .data-table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; white-space: nowrap; }
         .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: center; }
@@ -387,12 +402,8 @@
         .btn-row-print { background-color: #10b981; color: white; padding: 5px 10px; font-size: 11px; border-radius: 4px; font-weight: bold; }
         .btn-row-print:hover { background-color: #059669; }
 
-        /* --- SCREEN OUT CLASS HIDING SLIPS --- */
-        .hidden-print-slip {
-            display: none;
-        }
+        .hidden-print-slip { display: none; }
 
-        /* --- RE-STRUCTURED PRINT ENGINE MEDIA CONFIG --- */
         @media print {
             html, body {
                 height: auto !important;
@@ -401,15 +412,11 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
-
-            /* Clear screen configurations */
             #loginWrapper, #appContainer, .sidebar, .main-content, .container, form, #statusBanner, .no-print {
                 display: none !important;
                 height: 0 !important;
                 opacity: 0 !important;
             }
-
-            /* FORCE SELECTIVE INJECTION RULE ON DEMAND */
             .hidden-print-slip.force-print-visible {
                 display: block !important;
                 visibility: visible !important;
@@ -423,7 +430,6 @@
                 box-sizing: border-box !important;
                 page-break-inside: avoid !important;
             }
-
             .print-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 11.5px; }
             .print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 5px 10px; text-align: center !important; vertical-align: middle; }
             .print-table th { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; width: 35%; }
@@ -445,6 +451,7 @@
         <p>MAKING EASIER FOR EVERYONE -ACFS IT </p>
         
         <div id="loginErrorMsg" class="login-error">⚠️ Incorrect Username or Password</div>
+        <div id="otpErrorMsg" class="login-error">⚠️ Invalid OTP! Security Access Denied.</div>
         
         <form id="loginForm" onsubmit="handleAppLogin(event)">
             <div class="login-group">
@@ -457,7 +464,15 @@
             
             <span class="forgot-link" onclick="redirectToPasswordReset()">Forgot your password?</span>
             <br>
-            <button type="submit" class="btn-signin">Welcome ACFS Zone</button>
+            <button type="submit" id="loginSubmitBtn" class="btn-signin">Welcome ACFS Zone</button>
+        </form>
+
+        <form id="otpForm" class="otp-box" onsubmit="handleOtpVerification(event)">
+            <p style="color: #2563eb; font-weight: 600; margin-bottom: 15px; font-size:14px;">🔒 Security OTP aapke registered corporate email par bhej diya gaya hai.</p>
+            <div class="login-group">
+                <input type="number" id="inputOtp" placeholder="Enter 6-Digit Mail OTP" required>
+            </div>
+            <button type="submit" class="btn-verify">Verify & Open Matrix Dashboard</button>
         </form>
     </div>
 </div>
@@ -911,6 +926,23 @@
 </div>
 
 <script>
+    // ==========================================
+    // 🔒 EMAILJS AND SECURITY CONFIGURATION
+    // ==========================================
+    const EMAILJS_PUBLIC_KEY = '2PKXsmmo0ZA5WPMhE';   // Account Settings -> Public Key
+    const EMAILJS_SERVICE_ID = 'service_v3elgqb';   // Email Services -> Service ID
+    const EMAILJS_TEMPLATE_ID = 'template_4zzivbu'; // Email Templates -> Template ID
+    
+    // Jin fix emails par aap OTP mangaana chahte hain (Ek ya multiple comma separated string)
+    const TARGET_ADMIN_EMAIL = 'anshikarai7908@gmail.com'; 
+
+    // EmailJS Initializer Engine initialization
+    (function(){
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+    })();
+
+    let generatedOtp = null; // Generated Verification OTP global cache variable
+
     const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7'; 
     const EMP_SHEET_API_URL = 'https://sheetdb.io/api/v1/lm4gi8ankc63d'; 
 
@@ -918,21 +950,69 @@
     let globalSheetFullCache = []; 
     let currentFetchedAssetRow = null; 
 
+    // Updated handleAppLogin to incorporate Free Mail API trigger router
     function handleAppLogin(event) {
-        event.preventDefault();
-        const username = document.getElementById('loginUsername').value.trim();
-        const pass = document.getElementById('loginPassword').value;
-        const errorMsg = document.getElementById('loginErrorMsg');
+    event.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    const errorMsg = document.getElementById('loginErrorMsg');
+    const loginBtn = document.getElementById('loginSubmitBtn');
 
-        if (username === "admin" && pass === "Ashu@2026") {
-            errorMsg.style.display = "none";
+    if (username === "admin" && pass === "Ashu@2026") {
+        errorMsg.style.display = "none";
+        loginBtn.disabled = true;
+        loginBtn.style.backgroundColor = "#cbd5e1";
+        loginBtn.innerText = "Sending secure Mail OTP...";
+
+        // 6 Digit ka numeric safe token key create karein
+        generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const templateParams = {
+            otp_code: generatedOtp,
+            to_email: TARGET_ADMIN_EMAIL,
+            to_name: "Admin",
+            message: `Aapka secure OTP code ${generatedOtp} hai.`
+        };
+
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            
+            // --- TYPING ERROR FIXED HERE ---
+            document.getElementById('loginForm').style.display = "none"; // Purana form chhip gaya
+            document.getElementById('otpForm').style.display = "block";  // OTP input box samne aa gaya
+        }, function(error) {
+            console.error('FAILED...', error);
+            alert("❌ Connection Error!\n\nEmailJS Response: " + JSON.stringify(error));
+            loginBtn.disabled = false;
+            loginBtn.style.backgroundColor = "#4cd964";
+            loginBtn.innerText = "Welcome ACFS Zone";
+        });
+
+    } else {
+        errorMsg.style.display = "block";
+    }
+}
+
+    // New verification sub-routine handling pin confirmation
+    function handleOtpVerification(event) {
+        event.preventDefault();
+        const userOtp = document.getElementById('inputOtp').value.trim();
+        const otpError = document.getElementById('otpErrorMsg');
+
+        if (generatedOtp && userOtp === generatedOtp) {
+            otpError.style.display = "none";
+            alert("✅ Verification Successful! Access Granted.");
+            
+            // Unlocking the system container layer completely
             document.getElementById('loginWrapper').style.display = "none";
             document.getElementById('appContainer').style.display = "flex";
             
             loadEmployeeDatabase();
             fetchNextSrNo(); 
         } else {
-            errorMsg.style.display = "block";
+            otpError.style.display = "block";
+            document.getElementById('inputOtp').value = ""; // Refresh input values
         }
     }
 
@@ -1211,8 +1291,6 @@
         fetchNextSrNo(); 
     }
 
-    /* --- MOVEMENT LOG ENGINE --- */
-    let globalMoveId = "";
     function fetchForMovement() {
         const assetId = document.getElementById('moveAssetSearch').value.trim();
         if(!assetId) return;
@@ -1272,7 +1350,6 @@
             return;
         }
 
-        // technical specification data parameters inject block
         document.getElementById('pm_assetId').innerText = globalMoveId;
         document.getElementById('pm_sysType').innerText = document.getElementById('moveSysType').value || '-';
         document.getElementById('pm_modelSpecs').innerText = `${currentFetchedAssetRow['Model'] || '-'} (Specs: RAM - ${currentFetchedAssetRow['RAM'] || 'N/A'}, Storage - ${currentFetchedAssetRow['HDD/SSD'] || 'N/A'}, Proc - ${currentFetchedAssetRow['Processor'] || 'N/A'})`;
@@ -1280,11 +1357,9 @@
         document.getElementById('pm_osConfig').innerText = currentFetchedAssetRow['Windows'] || '-';
         document.getElementById('pm_ipAddress').innerText = currentFetchedAssetRow['IP'] || 'N/A';
         
-        // Old Deploy state mapping
         document.getElementById('pm_oldUser').innerText = document.getElementById('currUser').value || '-';
         document.getElementById('pm_oldLoc').innerText = document.getElementById('currLoc').value || '-';
 
-        // Manual Fill fields reading values directly from real-time elements
         document.getElementById('pm_newUser').innerText = document.getElementById('newMoveUser').value || '-';
         document.getElementById('pm_newEmpName').innerText = document.getElementById('newEmpName').value || '-';
         document.getElementById('pm_newEmpId').innerText = document.getElementById('newEmpId').value || '-';
@@ -1298,7 +1373,6 @@
         const today = new Date();
         document.getElementById('pm_auto_date').innerText = `Date: ${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
 
-        // Explicit CSS priority force injection bypasses global media blocks completely
         const printTemplate = document.getElementById('printMovementTemplate');
         printTemplate.classList.add('force-print-visible');
 
