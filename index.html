@@ -943,8 +943,13 @@
 
     let generatedOtp = null; // Generated Verification OTP global cache variable
 
-    const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7'; 
-    const EMP_SHEET_API_URL = 'https://sheetdb.io/api/v1/lm4gi8ankc63d'; 
+    // --- 📌 GOOGLE SHEET API BASE CONFIGURATION ---
+const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7?sheet=IMAC'; // Master IMAC Tab
+const EMP_SHEET_API_URL = 'https://sheetdb.io/api/v1/lm4gi8ankc63d'; // Employee DB (Alag spreadsheet connection)
+
+// 🟢 FIXED REQ: Aapke naye tabs ke Capital Names ke mutabaq direct single-sheet routing setup
+const MOVEMENT_LOG_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7?sheet=MOVEMENT'; 
+const DEALLOCATION_API_URL = 'https://sheetdb.io/api/v1/1vyqdlfwkktx7?sheet=DISALLOCATION';
 
     let globalEmployeeDatabase = []; 
     let globalSheetFullCache = []; 
